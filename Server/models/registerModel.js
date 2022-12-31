@@ -7,4 +7,4 @@ const registerSchema = mongoose.Schema({
     token: {type:String}
 })
 
-mongoose.exports = mongoose.model("registerUser", registerSchema);
+module.exports = mongoose.model("registerUser", registerSchema);

@@ -9,7 +9,7 @@ async function register(req, res){
             res.send("all input required");
         }
 
-        const oldUser = await user.findone({username});
+        const oldUser = await user.findOne({username});
         if(oldUser){
             return (res.status(409),
                 res.send("Already Register username please login"));
@@ -20,7 +20,7 @@ async function register(req, res){
             username,
             password
         });
-
+        console.log("Created the Data"); 
         res.status(201).json(Createuser);
     }catch(err){
         res.status(200);
