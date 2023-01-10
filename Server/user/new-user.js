@@ -1,12 +1,13 @@
 const user = require("../models/registerModel");
+const bcrypt = require('bcryptjs');
 
-async function register(req, res){
+async function register(req,res){
     console.log("Reached Inside Register Route");
     try{
-        const {name, username, password } = req.body; // input from user
-        if(!(name && username && password)){
+        let {email, password, username } = req.body.data; // input from user
+        if(!(email && username && password)){
             res.status(200);
-            res.send("all input required");
+          return  res.send("all input required");
         }
 
         const oldUser = await user.findOne({username});
@@ -14,17 +15,26 @@ async function register(req, res){
             return (res.status(409),
                 res.send("Already Register username please login"));
         }
+        
+        const salt = bcrypt.genSaltSync(10);
+
+        const hashedPassword = bcrypt.hashSync(password, salt);
+        console.log(hashedPassword);
+
 
         const Createuser = await user.create({
-            name,
+            email,
             username,
-            password
+            password: hashedPassword
         });
+
         console.log("Created the Data"); 
-        res.status(201).json(Createuser);
+
+        return res.status(201).json(Createuser);
     }catch(err){
-        res.status(200);
         console.log("Error in Register route:", err.message);
+        return res.status(200);
+        
     }
 }
 

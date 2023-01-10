@@ -1,14 +1,9 @@
 import { useState } from "react";
 import React from "react";
 
+
 export default function Regs() {
 
-  const [State] = useState([{
-    Email: 'abc', 
-    Username: 'abc', 
-    Password: 'abc', 
-    Cpassword: 'abc'
-  }]);
 
   const [email, setemail] = useState("");
   const [username, setusername] = useState("");
@@ -17,26 +12,41 @@ export default function Regs() {
 
  const registerChanges = async (e)=>{
   e.preventDefault();
-  State[0].Email = email;
-  State[0].Cpassword = cpassword;
-  State[0].Password = password;
-  State[0].Username = username;
-  const {Email, Password, Username} = State;
-  const res = await fetch("/register", {
-    method: "POST",
-    body:JSON.stringify({
-    Email, Password, Username
-    })
-  })
-  const data = await res.json();
-  if(data.status===200 || data.status===409){
-    alert("Server Error");
+  if(cpassword===password){
+    console.log(email, password, username);
+    const res = await fetch('/user/register', {
+    method: 'POST',
+    body: JSON.stringify({
+      data: {email:email, password:password, username:username}
+    }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+    // .then(res => res.json())
+    // .then(response => console.log('Success:', JSON.stringify(response)))
+    // .catch(error => console.error('Error:', error));
+    const data = await res.json();
+    if(data.status === 200){
+      window.alert("All Input required! ")
+    }
+    else if(data.status === 409 ){
+        window.alert("Already Register username please login");
+    }
+    else{
+      window.alert("Registration Done! Go To login");
+      
+    }
   }
-  else{
-    alert("Sent Successfully");
+  else {
+    alert("Password Not matched!")
+    return
   }
 }
 
+function chaeckSet(e){
+  setcpassword(e.target.value);
+}
   return (
     <div>
       <form method="POST">
@@ -66,17 +76,17 @@ export default function Regs() {
         <h2>Confirm Password</h2>
 
           <input name="cpassword"
-          onChange={(e)=>{setcpassword(e.target.value)}}
+          onChange={chaeckSet}
           value={cpassword}
-          type={"password"}/>
+          type={"password"}/><br/>
 
         <button onClick={(registerChanges)}>Register</button>
         <p>
-          Have an Account? <span></span>
+          Have an Account? <span>Login</span>
         </p>
       </form>
       <div>
-        <img src="https://i.ibb.co/5YCbHPH/small-team-discussing-ideas-2194220-0-1.png" />
+        <img src="https://i.ibb.co/5YCbHPH/small-team-discussing-ideas-2194220-0-1.png" alt="" />
       </div>
     </div>
   );
