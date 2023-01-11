@@ -1,21 +1,28 @@
-const user = require(`../models/userModel`);
+//const user = require(`../models/userModel`);
+const user = require("../models/registerModel");
 const bcrypt = require("bcryptjs");
+const { json } = require("stream/consumers");
 
 
 const login = async (req, res)=>{
     try{
-        const {username, password} = req.body;
-
-        if(!username || !password){
-            return res.status(409).json({Error:"Please Fill the Data"})
+        const {Username, Password} = req.body.data;
+        console.log(JSON.stringify(req.body));
+        if(!Username || !Password){
+            return res.status(409).json({message:"Please Fill the Data"})
         }
-
+        const username = Username;
         const userLogin = await user.findOne({username});
         console.log(userLogin);
         if(!userLogin){
-            return res.status(409).json({message: "User Not Found"})
+            return res.status(410).json({message: "User Not Found"})
         }
-        const isMatch = bcrypt.compare(password, userLogin.password);
+
+        if(userLogin.Password == "null" || userLogin.password === null){
+            res.status(409).json({message:"Invalid Credentials"});
+            return;
+        }
+        const isMatch = bcrypt.compare(Password, userLogin.password);
         const token   = await userLogin.generateAuthToken();
         console.log(token);
         res.cookie("jwtoken", token,{

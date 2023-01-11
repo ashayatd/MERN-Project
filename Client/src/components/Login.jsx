@@ -11,15 +11,20 @@ const loginUser = async (e)=>{
 const res = await fetch('/loguser/login', {
   method:"POST",
   body:JSON.stringify({
-    data:(Username, Password)
+    data:{Username, Password}
   }),
   headers:{
     'Content-Type': 'application/json'
   }
 });
+ const data = await res.json();
+  if(res.status != 200){
+    window.alert(data.message)
+  }
 
-const data = res.json();
-
+  else{
+    window.alert("Login Done");
+  }
 }
 
   return (

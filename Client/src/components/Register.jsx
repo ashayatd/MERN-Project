@@ -23,14 +23,12 @@ export default function Regs() {
       'Content-Type': 'application/json'
     }
   });
-    // .then(res => res.json())
-    // .then(response => console.log('Success:', JSON.stringify(response)))
-    // .catch(error => console.error('Error:', error));
-    const data = await res.json();
-    if(data.status === 200){
+  
+    if(res.status === 200){
       window.alert("All Input required! ")
     }
-    else if(data.status === 409 ){
+    else if(res.status === 409 ){
+      
         window.alert("Already Register username please login");
     }
     else{
