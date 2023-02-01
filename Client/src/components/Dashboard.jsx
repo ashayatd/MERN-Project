@@ -1,10 +1,39 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
+import { Link, Outlet } from "react-router-dom";
+
 
 function Dash() {
 
 const [data, setdata] = useState([]);
 const [Input, setInput] = useState("");
 let [count, setcount] = useState(0);
+
+const calldashboardpage = async()=> {
+  try {
+    const res = await fetch('/dashboard', {
+      method:"GET",
+      headers:{
+        Accept: "application/json",
+        "Content-type":"Application/json"
+      },
+      credentials: "include"
+    }) 
+    const data = await res.json();
+    console.log(data);
+    if(!res.status === 200){
+      const error = new Error(res.error);
+      throw(error);
+    }
+  }
+  catch (error) {
+    console.log(error);
+    window.alert("Please Login Again...");
+  }
+}
+
+    useEffect(() => {
+      calldashboardpage();
+    }, []);
 
   function addList() {
     if (data === "") {
@@ -23,6 +52,24 @@ let [count, setcount] = useState(0);
 
   return (
     <div>
+       <nav id="navbar">
+    <ul>
+      <li><Link Link to="/" className="Link">
+      Home
+    </Link></li>
+      <li><Link Link to="/about" className="Link">
+      About
+    </Link></li>
+      <li><Link Link to="/register" className="Link">
+      Register
+    </Link></li>
+      <li><Link Link to="/dashboard" className="Link">
+      Dashboard
+    </Link></li>
+    </ul>
+  </nav>
+  
+  <Outlet />
       <>
         <h2>Hello</h2>
         <h2>John Doe </h2>

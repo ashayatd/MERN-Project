@@ -1,4 +1,3 @@
-//const user = require(`../models/userModel`);
 const user = require("../models/registerModel");
 const bcrypt = require("bcryptjs");
 const { json } = require("stream/consumers");
@@ -25,15 +24,15 @@ const login = async (req, res)=>{
         const isMatch = bcrypt.compare(Password, userLogin.password);
         const token   = await userLogin.generateAuthToken();
         console.log(token);
-        res.cookie("jwtoken", token,{
-            expires:new Date(Date.now() + 2589200000),
-            httpOnly:true
-        });
+        
         if(!isMatch){
             res.status(409).json({message:"Invalid Credentials"});
         }
         else{
-            res.status(200).json({message:"User signin Successfully"});
+            res.status(200).cookie("jwtoken", token,{
+                expires:new Date(Date.now() + 2589200000),
+                httpOnly:true
+            }).json({message:"User signin Successfully"});
         }
     }
     catch(err){

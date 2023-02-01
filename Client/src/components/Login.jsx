@@ -1,52 +1,94 @@
-import {React} from "react";
-import {useState}  from "react";
+import { React } from "react";
+import { useState } from "react";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import "./Login.css";
 
-const Login = ()=> {
-const [Username, setUsername] = useState('');
-const [Password, setPassword] = useState('');
+const Login = () => {
+  const [Username, setUsername] = useState("");
+  const [Password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-const loginUser = async (e)=>{
-  e.preventDefault();
+  const loginUser = async (e) => {
+    e.preventDefault();
 
-const res = await fetch('/loguser/login', {
-  method:"POST",
-  body:JSON.stringify({
-    data:{Username, Password}
-  }),
-  headers:{
-    'Content-Type': 'application/json'
-  }
-});
- const data = await res.json();
-  if(res.status != 200){
-    window.alert(data.message)
-  }
-
-  else{
-    window.alert("Login Done");
-  }
-}
+    const res = await fetch("/loguser/login", {
+      method: "POST",
+      body: JSON.stringify({
+        data: { Username, Password },
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await res.json();
+    if (res.status != 200) {
+      window.alert(data.message);
+    } 
+    else {
+      navigate.push("./dashboard");
+    }
+  };
 
   return (
+    <>
+    <div>
+    <nav id="navbar">
+      <ul>
+        <li><Link Link to="/" className="Link">
+        Home
+      </Link></li>
+        <li><Link Link to="/about" className="Link">
+        About
+      </Link></li>
+        <li><Link Link to="/register" className="Link">
+        Register
+      </Link></li>
+      </ul>
+    </nav>
+    <Outlet />
+  </div>
+
     <div>
       <div>
-        <h2>Welcome !</h2>
-        <h2>Sign in to </h2>
-        <p>Lorem Ipsum is simply</p>
-        <h2>Username</h2>
-        <input onChange={(e)=>{setUsername(e.target.value)}} value={Username}/>
-        <h2>Password</h2>
-        <input onChange={(e)=>{setPassword(e.target.value)}} value={Password} type="password"/>
-        <input type="checkbox"/><p>Rememebr me</p>
-        <p>Forgot Password ?</p>
-        <button onClick={loginUser}>Login</button>
-        <p>Don`t have an Account?<span>Register</span></p>
-      </div>
-
-      <div>
-        <img src='https://i.ibb.co/5YCbHPH/small-team-discussing-ideas-2194220-0-1.png' alt=""/>
+         {/*  */}
+        <div className="login-container">
+          <form className="login-form">
+            <h1 className="form-title">Login</h1>
+            <div className="form-group">
+              <label htmlFor="username">Username:</label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={Username}
+                onChange={(event) => setUsername(event.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="password">Password:</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={Password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+              />
+            </div>
+            <button type="submit" onClick={loginUser}>
+              Login
+            </button>
+          </form>
+        </div>
       </div>
     </div>
-  )
-}
+    </>
+  );
+};
 export default Login;
+
+
+
+
+
